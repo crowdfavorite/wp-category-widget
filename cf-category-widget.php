@@ -31,7 +31,7 @@ class CF_Category_Selection extends WP_Widget {
 		$html = '<div id="'.esc_attr($this->id).'" class="widget clearfix">';
 
 		if (!empty($title)) {
-			$html .= '<h2 class="widget-title">'.esc_html($title).'</h2>';
+			$html .= '<h2 class="widget-title section-title">'.esc_html($title).'</h2>';
 		}
 
 		if (!empty($category_ids)) {
