@@ -37,12 +37,9 @@ class CF_Category_Selection extends WP_Widget {
 		if (!empty($category_ids)) {
 			$html .= '<ul class="cfcw-category-list">';
 			$cat_args = array(
-			    'orderby' => 'none', 
-				'hide_empty' => false, 
 				'include' => $category_ids,
-				'fields' => 'all', 
 			);
-			$categories = get_terms('category', $cat_args);
+			$categories = $this->_get_terms($cat_args);
 			if (!is_wp_error($categories) && !empty($categories)) {
 				foreach ($categories as $category) {
 					$html .= '<li><a href="'.esc_url(get_term_link($category, 'category')).'">'.esc_html($category->name).'</a></li>';
@@ -59,7 +56,7 @@ class CF_Category_Selection extends WP_Widget {
 	 * Form
 	 */
 	public function form($instance) {
-		$categories = get_terms('category');
+		$categories = $this->_get_terms();
 		$title = !empty($instance['title']) ? $instance['title'] : '';
 		// This javascript only should fire on save, chosen acts a little strange otherwise
 		if (isset($_POST['widget-id'])) :
@@ -95,6 +92,22 @@ class CF_Category_Selection extends WP_Widget {
 		$instance['title'] = !empty($new_instance['title']) ? $new_instance['title'] : '';
 		$instance['categories'] = ( !empty( $new_instance['categories'] ) ) ? ( $new_instance['categories'] ) : array();
 		return $instance;
+	}
+
+	protected function _get_terms($args = array()) {
+		$default_args = array(
+			'orderby' => 'name',
+			'order' => 'ASC',
+			'hide_empty' => false,
+			'fields' => 'all'
+		);
+
+		$args = array_merge($default_args, $args);
+		$terms = get_terms('category', $args);
+		if (!is_array($terms)) {
+			$terms = array();
+		}
+		return $terms;
 	}
 }
 
